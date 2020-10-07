@@ -5,21 +5,24 @@
 #define TAILLE 20
 
 int main() {
-	char mot[TAILLE], mot2[TAILLE]={0};
+	char mot[TAILLE];
 	int i = 0;
-
+	mot[0] = 0;
 	printf("Mot: ");
 	scanf_s("%s", mot, _countof(mot));
 	int taille= strlen(mot);
-	for ( i = 0; i <= taille; i++)
+	taille;
+	for ( i = 0; i < taille/2; i++)
 	{
-		mot2[taille-i] = mot[i];
-	}
-
-	if (strcmp(mot, mot2) == 0) 
+		if (mot[taille - i] == mot[i])
+			;
+		else
+		{
+			printf("Ce n'est pas un palindrome..\n");
+			break;
+		}
+	} 
 		printf("C'est un PALINDROME\n");
-	else
-		printf("Ce n'est pas un plalydrome..\n");
 
 
 
