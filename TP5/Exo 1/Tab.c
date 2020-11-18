@@ -4,14 +4,8 @@
 #include <math.h>
 #include "Tab.h"
 #define sizetab 10
+#define TAILLEAJOUT 50
 
-
-int main (){
-	int myTab[sizetab] = NULL;
-
-	initTab(&myTab, sizetab);
-
-}
 
 int initTab(int *tab, int size)
 {
@@ -21,5 +15,40 @@ int initTab(int *tab, int size)
 			*(tab + i) = 0;
 		return size;
 	}
-	else return -1;
+	else return EXIT_FAILURE;
+}
+
+int afficheTab(int* tab, int size, int nbElts)
+{
+	if (tab != NULL && size > 0 && size >= nbElts) {
+		int i = 0;
+		for (i = 0; i < nbElts; i++)
+			printf(" %d ", *(tab + i));
+		return 0;
+	}
+	else return EXIT_FAILURE;
+}
+
+int* ajoutElementDansTableau(int* tab, int *size, int *nbElts, int element)
+{
+	*nbElts = *nbElts + 1;
+	if (*nbElts < *size) {
+		*(tab + *nbElts-1) = element;
+		
+		return tab;
+	}
+	else {
+		int* tabl = NULL;
+		tabl= (int*)realloc(tab, *size+TAILLEAJOUT * sizeof(int));
+		if (tabl == NULL) {
+			printf("mémoire insuffisante");
+			return NULL;
+		}
+		else {
+			tab = tabl;
+			*(tab + *nbElts-1) = element;
+			*size = *size + TAILLEAJOUT;
+			return  tab ;
+		}
+	}
 }
