@@ -9,13 +9,15 @@
 
 int main() {
 	int myTab[sizetab],* myTab2 = NULL;
-	int nbtab2 = 20,nbr=nbElts, i = 0,TAILLE= TAB2SIZE;//nbtab2=nbr de chiffre à écrire dedans
+	int nbtab2 = 20,nbr=nbElts, i = 0,TAILLE= TAB2SIZE;//nbtab2=nbr de chiffre à écrire dans myTAB2
 
 	initTab(&myTab, sizetab);// -DEBUT MYTAB1-
 	printf("\nmyTab1: ");
-	afficheTab(&myTab, sizetab, nbr); //Affiche les nbr premier chiffres de Mytab -FIN MY TAB1-
-
-	myTab2 = (int*)malloc(TAB2SIZE * sizeof(int));//Alloue l'espace demandé -DEBUT MYTAB2-
+	afficheTab(&myTab, sizetab, nbr); //Affiche les nbr premier chiffres de Mytab 
+									  
+									  //-FIN MY TAB1-
+									  //-DEBUT MYTAB2 -
+	myTab2 = (int*)malloc(TAB2SIZE * sizeof(int));//Alloue l'espace demandé 
 
 	if (myTab2 != NULL) 
 		initTab(myTab2, sizetab); //Initialise MyTab2
@@ -38,8 +40,9 @@ int main() {
 	}
 	else {
 		printf("\nmyTab2 v2= ");
-		afficheTab(myTab2, TAILLE, nbtab2);
+		afficheTab(myTab2, TAILLE, nbtab2);//Affivhe myTab2
 	}
-	free(myTab2);//-FIN MYTAB2-
+	free(myTab2);
+									//-FIN MYTAB2-
 	return EXIT_SUCCESS;
 }

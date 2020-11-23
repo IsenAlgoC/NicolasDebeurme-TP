@@ -7,7 +7,7 @@
 #define TAILLEAJOUT 50
 
 
-int initTab(int *tab, int size)
+int initTab(int *tab, int size) //Initialise le tableau de taille "SIZE" avec des 0
 {
 	if (tab != NULL && size > 0) {
 		int i = 0;
@@ -18,7 +18,7 @@ int initTab(int *tab, int size)
 	else return EXIT_FAILURE;
 }
 
-int afficheTab(int* tab, int size, int nbElts)
+int afficheTab(int* tab, int size, int nbElts) //Affiche le tableau de taille "SIZE" et de "NBElts" éléments
 {
 	if (tab != NULL && size > 0 && size >= nbElts) {
 		int i = 0;
@@ -30,8 +30,8 @@ int afficheTab(int* tab, int size, int nbElts)
 }
 
 int* ajoutElementDansTableau(int* tab, int *size, int *nbElts, int element)
-{
-	*nbElts = *nbElts + 1;
+{                                        //Ajoute un élément dans le tableau, 
+	*nbElts = *nbElts + 1;				 //si le tableau est trop petit il l'agrandit et le relocalise dans la memoire.
 	if (*nbElts < *size) {
 		*(tab + *nbElts-1) = element;
 		
