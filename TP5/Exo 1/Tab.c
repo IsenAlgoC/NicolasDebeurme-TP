@@ -30,8 +30,9 @@ int afficheTab(int* tab, int size, int nbElts) //Affiche le tableau de taille "S
 }
 
 int* ajoutElementDansTableau(int* tab, int *size, int *nbElts, int element)
-{                                        //Ajoute un élément dans le tableau, 
-	*nbElts = *nbElts + 1;				 //si le tableau est trop petit il l'agrandit et le relocalise dans la memoire.
+{                            //Ajoute un élément dans le tableau, 
+							//si le tableau est trop petit il l'agrandit et le relocalise dans la memoire.
+	*nbElts = *nbElts + 1;		
 	if (*nbElts < *size) {
 		*(tab + *nbElts-1) = element;
 		

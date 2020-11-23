@@ -42,7 +42,7 @@ int main() {
 		printf("\nmyTab2 v2= ");
 		afficheTab(myTab2, TAILLE, nbtab2);//Affivhe myTab2
 	}
-	free(myTab2);
+	free(myTab2); //destruction tableau myTab2
 									//-FIN MYTAB2-
 	return EXIT_SUCCESS;
 }
