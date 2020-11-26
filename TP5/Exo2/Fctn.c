@@ -108,7 +108,7 @@ int deleteElements(TABLEAU* tab, int startPos, int endPos)
 			return tab->size;
 		}
 		if(startPos==endPos){
-			for (int i = startPos; i < tab->size; i++) 
+			for (int i = startPos; i < (tab->size-1); i++) 
 				*(tab->elt + i - 1)=*(tab->elt+i);
 			tab->size = tab->size - 1;
 			return tab->size;
