@@ -30,6 +30,7 @@ int ajouter_un_contact_dans_rep(Repertoire *rep, Enregistrement enr)
 	{
 		*(rep->tab + rep->nb_elts) = enr;
 		rep->nb_elts+= 1;
+		rep->est_trie = false;
 	}
 	else {
 		return(ERROR);
@@ -77,14 +78,15 @@ void supprimer_un_contact_dans_rep(Repertoire *rep, int indice) {
 	// compléter code ici pour tableau
 	if (rep->nb_elts >= 1)		/* s'il y a au moins un element ds le tableau */
 	{						/* et que l'indice pointe a l'interieur */
-		
 
-
-
-
-
-		rep->nb_elts -= 1;		/* ds ts les cas, il y a un element en moins */
-		modif = true;
+		if (indice > -1 && indice < rep->nb_elts) {
+			for (int i = indice; i < rep->nb_elts - 1; i++) {
+				*(rep->tab + i) = *(rep->tab + i + 1);
+			}
+			rep->nb_elts -= 1;		/* ds ts les cas, il y a un element en moins */
+			modif = true;
+		}
+		else modif = false;
 	}
 
 	return;
@@ -118,7 +120,12 @@ void supprimer_un_contact_dans_rep(Repertoire *rep, int indice) {
   /**********************************************************************/
 void affichage_enreg(Enregistrement enr)
 {
-	// code à compléter ici
+	int i = 0;
+	while (i != 0)
+	{
+
+	}
+	
 
 
 } /* fin affichage_enreg */
@@ -128,11 +135,25 @@ void affichage_enreg(Enregistrement enr)
   /* ex | Dupont                |Jean                  |0320304050      */
   /**********************************************************************/
 void affichage_enreg_frmt(Enregistrement enr)
-{
-	// code à compléter ici
-	// comme fonction affichage_enreg, mais avec présentation alignées des infos
+{	
+	int space = 0;
+	printf("| ");
+	printf_s("%s", enr.nom);
+	space = MAX_NOM - strlen(enr.nom);
+	for (int i = 0; i < space; i++)
+		printf_s(" ");
+	printf("| ");
+	printf_s("%s", enr.prenom);
+	space= MAX_NOM - strlen(enr.prenom);
+	for (int i = 0; i < space; i++)
+		printf_s(" ");
+	printf("| ");
+	printf_s("%s", enr.tel);
+	space = MAX_TEL - strlen(enr.tel);
+	for (int i = 0; i < space; i++)
+		printf_s(" ");
 	
-
+	printf("\n");
 } /* fin affichage_enreg */
 
 
