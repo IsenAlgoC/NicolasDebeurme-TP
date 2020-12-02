@@ -23,31 +23,15 @@ extern bool modif;
 int ajouter_un_contact_dans_rep(Repertoire *rep, Enregistrement enr)
 {
 #ifdef IMPL_TAB
-	int idx=0;
+	int idx;
 
 	if (rep->nb_elts < MAX_ENREG)
 	{
-		for ( idx = 0; idx < rep->nb_elts; idx++)
-		{
-			rep->tab=rep->tab + idx;
-			if (rep->tab->nom[0]==enr.nom[0])
-			{
-				if (rep->tab->nom[1] < enr.nom[1]) break;
-				else {
-					rep->nb_elts += 1;
-					for (int i = (rep->nb_elts-1); i >idx; i--)
-					{
-						*(rep->tab + i ) = *(rep->tab + i-1);
-					}
-					*(rep->tab) = enr;
-				}
-			}
-		}
-		if (*(rep->tab+1)==)
-		{
-
-		}
+		*(rep->tab + rep->nb_elts) = enr;
+		rep->nb_elts ++;
+		trier(rep);
 		rep->est_trie = true;
+
 	}
 	else {
 		return(ERROR);
@@ -137,12 +121,8 @@ void supprimer_un_contact_dans_rep(Repertoire *rep, int indice) {
   /**********************************************************************/
 void affichage_enreg(Enregistrement enr)
 {
-	int i = 0;
-	while (i != 0)
-	{
-
-	}
-	
+	printf_s("%s,%s", enr.nom, enr.prenom);
+	printf_s("               %s", enr.tel);
 
 
 } /* fin affichage_enreg */
@@ -178,12 +158,21 @@ void affichage_enreg_frmt(Enregistrement enr)
   /* test si dans l'ordre alphabetique, un enregistrement est apres     */
   /* un autre                                                           */
   /**********************************************************************/
-bool est_sup(Enregistrement enr1, Enregistrement enr2)
+bool est_sup(Enregistrement enr1, Enregistrement enr2)  //return true si enr1 est avant enr2, false sinon
 {
-	// code à compléter ici
-	
-
+	if (strcmp(enr1.nom, enr2.nom) < 0) return true;
+	if (strcmp(enr1.nom, enr2.nom) == 0) {
+		if (strcmp(enr1.prenom, enr2.prenom) < 0)return true;
+		if (strcmp(enr1.prenom, enr2.prenom) == 0) {
+			for (int i = 0; i < MAX_TEL; i++)
+			{
+				if (enr1.tel[i] < enr2.tel[i]) 
+					return true;
+			}
+		}
+	}
 	return(false);
+	
 
 }
  
@@ -195,7 +184,20 @@ void trier(Repertoire *rep)
 {
 
 #ifdef IMPL_TAB
-	// ajouter code ici pour tableau
+	int empl = 0;
+	Enregistrement tabl;
+	for (int i = 0; i < (rep->nb_elts -1); i++)
+	{
+		for ( int j = (rep->nb_elts -1); j >i; j--)
+		{
+			if (!est_sup(*(rep->tab + i), *(rep->tab + j))) {
+				tabl = *(rep->tab + i);
+				*(rep->tab + i) = *(rep->tab + j);
+				*(rep->tab + j) = tabl;
+			}
+
+		}
+	}
 	
 
 
@@ -223,7 +225,7 @@ void trier(Repertoire *rep)
 int rechercher_nom(Repertoire *rep, char nom[], int ind)
 {
 	int i = ind;		    /* position (indice) de début de recherche dans tableau/liste rep */
-	int ind_fin;			/* position (indice) de fin de tableau/liste rep */
+	int ind_fin=rep->nb_elts;			/* position (indice) de fin de tableau/liste rep */
 
 	char tmp_nom[MAX_NOM];	/* 2 variables temporaires dans lesquelles */
 	char tmp_nom2[MAX_NOM];	/* on place la chaine recherchee et la chaine lue dans le */
@@ -232,8 +234,14 @@ int rechercher_nom(Repertoire *rep, char nom[], int ind)
 
 
 #ifdef IMPL_TAB
-							// ajouter code ici pour tableau
-	
+	strcpy_s(tmp_nom, MAX_NOM, nom);
+	_strupr_s(tmp_nom,MAX_NOM);
+	while(!trouve&&i<ind_fin){
+		strcpy_s(tmp_nom2,MAX_NOM,  rep->tab[i].nom);
+		_strupr_s(tmp_nom2,MAX_NOM);
+		if(strcmp(tmp_nom,tmp_nom2)==0) trouve=true ;
+		i++;
+	}
 #else
 #ifdef IMPL_LIST
 							// ajouter code ici pour Liste
@@ -241,7 +249,7 @@ int rechercher_nom(Repertoire *rep, char nom[], int ind)
 #endif
 #endif
 
-	return((trouve) ? i : -1);
+	return((trouve) ? (i-1) : -1);
 } /* fin rechercher_nom */
 
   /*********************************************************************/
@@ -249,7 +257,14 @@ int rechercher_nom(Repertoire *rep, char nom[], int ind)
   /*********************************************************************/
 void compact(char *s)
 {
-	// compléter code ici
+	for (int i = 0; i < MAX_TEL; i++)
+	{
+		if (isdigit(*(s + i)) == 0) {
+			for (int j = i; j < MAX_TEL-1; j++)
+				*(s + j) = *(s + j + 1);
+			*(s + MAX_TEL - 1) = 0;
+		}
+	}
 
 	return;
 }
@@ -263,7 +278,20 @@ int sauvegarder(Repertoire *rep, char nom_fichier[])
 {
 	FILE *fic_rep;					/* le fichier */
 #ifdef IMPL_TAB
-	// ajouter code ici pour tableau
+	fic_rep = fopen_s(&fic_rep,&nom_fichier, "w");
+	if (fic_rep == NULL) {
+		return ERROR;
+		exit(1);
+	}
+	else {
+		int i = 0;
+		while (i < rep->nb_elts) {
+			fprintf(fic_rep, "%s;", rep->tab[i].nom);
+			fprintf(fic_rep, "%s;", rep->tab[i].prenom);
+			fprintf(fic_rep, "%s\n", rep->tab[i].tel);
+		}
+		fclose(fic_rep);
+	}
 	
 #else
 #ifdef IMPL_LIST
