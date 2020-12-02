@@ -23,14 +23,31 @@ extern bool modif;
 int ajouter_un_contact_dans_rep(Repertoire *rep, Enregistrement enr)
 {
 #ifdef IMPL_TAB
-	// compléter code ici pour tableau
-	int idx;
+	int idx=0;
 
 	if (rep->nb_elts < MAX_ENREG)
 	{
-		*(rep->tab + rep->nb_elts) = enr;
-		rep->nb_elts+= 1;
-		rep->est_trie = false;
+		for ( idx = 0; idx < rep->nb_elts; idx++)
+		{
+			rep->tab=rep->tab + idx;
+			if (rep->tab->nom[0]==enr.nom[0])
+			{
+				if (rep->tab->nom[1] < enr.nom[1]) break;
+				else {
+					rep->nb_elts += 1;
+					for (int i = (rep->nb_elts-1); i >idx; i--)
+					{
+						*(rep->tab + i ) = *(rep->tab + i-1);
+					}
+					*(rep->tab) = enr;
+				}
+			}
+		}
+		if (*(rep->tab+1)==)
+		{
+
+		}
+		rep->est_trie = true;
 	}
 	else {
 		return(ERROR);
