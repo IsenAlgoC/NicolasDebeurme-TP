@@ -65,7 +65,7 @@ int ajouter_un_contact_dans_rep(Repertoire *rep, Enregistrement enr)
 	
 #endif
 
-
+	modif = true; 
 	return(OK);
 
 } /* fin ajout */
@@ -184,7 +184,6 @@ void trier(Repertoire *rep)
 {
 
 #ifdef IMPL_TAB
-	int empl = 0;
 	Enregistrement tabl;
 	for (int i = 0; i < (rep->nb_elts -1); i++)
 	{
@@ -212,6 +211,7 @@ void trier(Repertoire *rep)
 
 
 	rep->est_trie = true;
+	modif = true;
 
 } /* fin trier */
 
