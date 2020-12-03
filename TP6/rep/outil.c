@@ -22,9 +22,9 @@ extern bool modif;
 
 int ajouter_un_contact_dans_rep(Repertoire *rep, Enregistrement enr)
 {
+	
 #ifdef IMPL_TAB
 	int idx;
-
 	if (rep->nb_elts < MAX_ENREG)
 	{
 		*(rep->tab + rep->nb_elts) = enr;
@@ -122,7 +122,7 @@ void supprimer_un_contact_dans_rep(Repertoire *rep, int indice) {
 void affichage_enreg(Enregistrement enr)
 {
 	printf_s("%s,%s", enr.nom, enr.prenom);
-	printf_s("               %s", enr.tel);
+	printf_s("%30s", enr.tel);
 
 
 } /* fin affichage_enreg */
@@ -278,21 +278,21 @@ int sauvegarder(Repertoire *rep, char nom_fichier[])
 {
 	FILE *fic_rep;					/* le fichier */
 #ifdef IMPL_TAB
-	fic_rep = fopen_s(&fic_rep,&nom_fichier, "w");
-	if (fic_rep == NULL) {
+	if(fopen_s(&fic_rep,nom_fichier, "w+")!=0 || fic_rep==NULL)
 		return ERROR;
-		exit(1);
-	}
 	else {
 		int i = 0;
 		while (i < rep->nb_elts) {
 			fprintf(fic_rep, "%s;", rep->tab[i].nom);
 			fprintf(fic_rep, "%s;", rep->tab[i].prenom);
 			fprintf(fic_rep, "%s\n", rep->tab[i].tel);
+			i++;
 		}
-		fclose(fic_rep);
+		
+
 	}
-	
+	fclose(fic_rep);
+	return 0;
 #else
 #ifdef IMPL_LIST
 	// ajouter code ici pour Liste
