@@ -1,10 +1,6 @@
-a;a;a
-a;a;a
-c;c;c
-debeurme;nicolas;0680513330
-g;g;g
-m;m;m
-oui;non;92834
-r;r;r
-u;u;u
-zdgc;ouc;2834
+zuc;hcz;29834
+zcdb;zdvjhc;82634
+A;B;C
+C;B;A
+B;C;A
+debeurme;nicolas;09283

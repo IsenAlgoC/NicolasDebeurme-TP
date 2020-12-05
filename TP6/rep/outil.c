@@ -31,6 +31,7 @@ int ajouter_un_contact_dans_rep(Repertoire *rep, Enregistrement enr)
 		rep->nb_elts ++;
 		trier(rep);
 		rep->est_trie = true;
+		modif = true;
 
 	}
 	else {
@@ -45,28 +46,31 @@ int ajouter_un_contact_dans_rep(Repertoire *rep, Enregistrement enr)
 	if (rep->nb_elts == 0) {
 		if (InsertElementAt(rep->liste, rep->liste->size, enr) != 0) {
 			rep->nb_elts += 1;
-			modif = true;
 			rep->est_trie = true;
-			return(OK);
+			inserted = true;
 		}
 
 	}
 	else {
-			//
-			// compléter code ici pour Liste
-			//
-			//
-			//
+		if (rep->nb_elts < MAX_ENREG) {
+			if (InsertElementAt(rep->liste, rep->liste->size, enr) != 0) {
+				rep->nb_elts += 1;
+				rep->est_trie = true;
+				inserted = true;
+			}
+			
+		}
+
 
 	}
-
 
 #endif
 	
 #endif
 
 	modif = true; 
-	return(OK);
+	if (inserted)  return OK;
+	else ERROR;
 
 } /* fin ajout */
   /**********************************************************************/
@@ -160,10 +164,10 @@ void affichage_enreg_frmt(Enregistrement enr)
   /**********************************************************************/
 bool est_sup(Enregistrement enr1, Enregistrement enr2)  //return true si enr1 est avant enr2, false sinon
 {
-	if (strcmp(enr1.nom, enr2.nom) < 0) return true;
-	if (strcmp(enr1.nom, enr2.nom) == 0) {
-		if (strcmp(enr1.prenom, enr2.prenom) < 0)return true;
-		if (strcmp(enr1.prenom, enr2.prenom) == 0) {
+	if (_strcmpi(enr1.nom, enr2.nom) < 0) return true;
+	if (_strcmpi(enr1.nom, enr2.nom) == 0) {
+		if (_strcmpi(enr1.prenom, enr2.prenom) < 0)return true;
+		if (_strcmpi(enr1.prenom, enr2.prenom) == 0) {
 			for (int i = 0; i < MAX_TEL; i++)
 			{
 				if (enr1.tel[i] < enr2.tel[i]) 
@@ -239,13 +243,20 @@ int rechercher_nom(Repertoire *rep, char nom[], int ind)
 	while(!trouve&&i<ind_fin){
 		strcpy_s(tmp_nom2,MAX_NOM,  rep->tab[i].nom);
 		_strupr_s(tmp_nom2,MAX_NOM);
-		if(strcmp(tmp_nom,tmp_nom2)==0) trouve=true ;
+		if(_strcmpi(tmp_nom,tmp_nom2)==0) trouve=true ;
 		i++;
 	}
 #else
 #ifdef IMPL_LIST
-							// ajouter code ici pour Liste
-	
+	strcpy_s(tmp_nom, MAX_NOM, nom);
+	_strupr_s(tmp_nom, MAX_NOM);
+	while (!trouve && i < ind_fin) {
+		strcpy_s(tmp_nom2, MAX_NOM, GetElementAt(rep->liste,i)->pers.nom);
+		_strupr_s(tmp_nom2, MAX_NOM);
+		if (_strcmpi(tmp_nom, tmp_nom2) == 0) trouve = true;
+		i++;
+	}
+
 #endif
 #endif
 
@@ -295,7 +306,21 @@ int sauvegarder(Repertoire *rep, char nom_fichier[])
 	return 0;
 #else
 #ifdef IMPL_LIST
-	// ajouter code ici pour Liste
+	if (fopen_s(&fic_rep, nom_fichier, "w+") != 0 || fic_rep == NULL)
+		return ERROR;
+	else {
+		int i = 0;
+		while (i < rep->nb_elts) {
+			fprintf(fic_rep, "%s;", GetElementAt(rep->liste, i)->pers.nom);
+			fprintf(fic_rep, "%s;", GetElementAt(rep->liste, i)->pers.prenom);
+			fprintf(fic_rep, "%s\n", GetElementAt(rep->liste, i)->pers.tel);
+			i++;
+		}
+
+
+	}
+	fclose(fic_rep);
+	return 0;
 #endif
 #endif
 
@@ -351,7 +376,20 @@ int charger(Repertoire *rep, char nom_fichier[])
 				}
 #else
 #ifdef IMPL_LIST
-														// ajouter code implemention liste
+				Enregistrement pers = { {'A'},{'A'},{'0'} };
+				SingleLinkedListElem *elem = NULL;
+				InsertElementAt(rep->liste,num_rec,pers);
+				elem = GetElementAt(rep->liste, (num_rec));
+				if (lire_champ_suivant(buffer, &idx, elem->pers.nom, MAX_NOM, SEPARATEUR) == OK)
+				{
+					idx++;							/* on saute le separateur */
+					if (lire_champ_suivant(buffer, &idx, elem->pers.prenom, MAX_NOM, SEPARATEUR) == OK)
+					{
+						idx++;
+						if (lire_champ_suivant(buffer, &idx, elem->pers.tel, MAX_TEL, SEPARATEUR) == OK)
+							num_rec++;		/* element à priori correct, on le comptabilise */
+					}
+				}
 #endif
 #endif
 
