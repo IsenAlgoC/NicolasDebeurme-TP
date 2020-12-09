@@ -41,7 +41,7 @@ int ajouter_un_contact_dans_rep(Repertoire *rep, Enregistrement enr)
 	
 #else
 #ifdef IMPL_LIST
-
+	int i = 0;
 	bool inserted = false;
 	if (rep->nb_elts == 0) {//Si la liste est vide on creer le premier maillon
 		if (InsertElementAt(rep->liste, rep->liste->size, enr) != 0) {
@@ -52,25 +52,33 @@ int ajouter_un_contact_dans_rep(Repertoire *rep, Enregistrement enr)
 
 	}
 	else {
-		if (rep->nb_elts < MAX_ENREG) {//On ajoute l'elemnt en le triant directement
-			int i = 1;
-			while(!inserted && i<=rep->nb_elts)//Permet de mettre lelement à l'endroit ou il doit être alphabetiquement
-			{
-				SingleLinkedListElem *elem=NULL;
+			if (rep->nb_elts < MAX_ENREG) {//On ajoute l'elemnt en le triant directement
+				SingleLinkedListElem* elem = NULL;
 				elem = rep->liste->head;
-				if (est_sup(enr, elem->pers)) {
-					if (InsertElementAt(rep->liste, i, enr) != 0) {
-						rep->nb_elts += 1;
-						rep->est_trie = true;
-						inserted = true;
+				while (!inserted && i <= rep->liste->size)//Permet de mettre lelement à l'endroit ou il doit être alphabetiquement
+				{
+					if (elem == NULL) {
+						if (InsertElementAt(rep->liste, i, enr) != 0) {
+							rep->nb_elts += 1;
+							rep->est_trie = true;
+							inserted = true;
+						}
 					}
+					else {
+						if (est_sup(enr, elem->pers)) {
+							if (InsertElementAt(rep->liste, i, enr) != 0) {
+								rep->nb_elts += 1;
+								rep->est_trie = true;
+								inserted = true;
+							}
+						}
+						elem = elem->next;
+					}
+					
+					i++;
 				}
-				elem = elem->next;
-				i++;
-			}
-			
-		}
 
+			}
 
 	}
 

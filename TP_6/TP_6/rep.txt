@@ -1,1 +1,6 @@
-gds;cdsku;2735
+a;a;a
+a;f;g
+b;b;b
+r;g;y
+z;z;0
+z;z;z
