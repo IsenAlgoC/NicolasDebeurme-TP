@@ -285,15 +285,14 @@ int rechercher_nom(Repertoire *rep, char nom[], int ind)
   /*********************************************************************/
 void compact(char *s)
 {
-	for (int i = 0; i < MAX_TEL; i++)
-	{
-		if (isdigit(*(s + i)) == 0) {
-			for (int j = i; j < MAX_TEL-1; j++)
-				*(s + j) = *(s + j + 1);
-			*(s + MAX_TEL - 1) = 0;
+	int j = 0;
+	for (int i = 0; i < MAX_TEL; i++) {
+		if (isdigit(*(s + i))) {
+			*(s + j) = *(s + i);
+			j++;
 		}
 	}
-
+	*(s + j) = '\0';
 	return;
 }
 
