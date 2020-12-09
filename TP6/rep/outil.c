@@ -53,7 +53,7 @@ int ajouter_un_contact_dans_rep(Repertoire *rep, Enregistrement enr)
 	}
 	else {
 		if (rep->nb_elts < MAX_ENREG) {
-			int i = 0;
+			int i = 1;
 			while(!inserted && i<=rep->nb_elts)
 			{
 				SingleLinkedListElem *elem=NULL;
@@ -65,6 +65,8 @@ int ajouter_un_contact_dans_rep(Repertoire *rep, Enregistrement enr)
 						inserted = true;
 					}
 				}
+				elem = elem->next;
+				i++;
 			}
 			
 		}
@@ -78,7 +80,7 @@ int ajouter_un_contact_dans_rep(Repertoire *rep, Enregistrement enr)
 
 	modif = true; 
 	if (inserted)  return OK;
-	else ERROR;
+	else return ERROR;
 
 } /* fin ajout */
   /**********************************************************************/
