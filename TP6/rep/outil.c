@@ -25,7 +25,7 @@ int ajouter_un_contact_dans_rep(Repertoire *rep, Enregistrement enr)
 	
 #ifdef IMPL_TAB
 	int idx;
-	if (rep->nb_elts < MAX_ENREG)
+	if (rep->nb_elts < MAX_ENREG) //On ajoute un contact à la fin du repertoire si le nombre max de contact est pas dépassé
 	{
 		*(rep->tab + rep->nb_elts) = enr;
 		rep->nb_elts ++;
@@ -43,7 +43,7 @@ int ajouter_un_contact_dans_rep(Repertoire *rep, Enregistrement enr)
 #ifdef IMPL_LIST
 
 	bool inserted = false;
-	if (rep->nb_elts == 0) {
+	if (rep->nb_elts == 0) {//Si la liste est vide on creer le premier maillon
 		if (InsertElementAt(rep->liste, rep->liste->size, enr) != 0) {
 			rep->nb_elts += 1;
 			rep->est_trie = true;
@@ -52,9 +52,9 @@ int ajouter_un_contact_dans_rep(Repertoire *rep, Enregistrement enr)
 
 	}
 	else {
-		if (rep->nb_elts < MAX_ENREG) {
+		if (rep->nb_elts < MAX_ENREG) {//On ajoute l'elemnt en le triant directement
 			int i = 1;
-			while(!inserted && i<=rep->nb_elts)
+			while(!inserted && i<=rep->nb_elts)//Permet de mettre lelement à l'endroit ou il doit être alphabetiquement
 			{
 				SingleLinkedListElem *elem=NULL;
 				elem = rep->liste->head;
@@ -90,7 +90,6 @@ int ajouter_un_contact_dans_rep(Repertoire *rep, Enregistrement enr)
 #ifdef IMPL_TAB
 void supprimer_un_contact_dans_rep(Repertoire *rep, int indice) {
 
-	// compléter code ici pour tableau
 	if (rep->nb_elts >= 1)		/* s'il y a au moins un element ds le tableau */
 	{						/* et que l'indice pointe a l'interieur */
 
@@ -117,7 +116,7 @@ void supprimer_un_contact_dans_rep(Repertoire *rep, int indice) {
 
 	int supprimer_un_contact_dans_rep_liste(Repertoire *rep, SingleLinkedListElem *elem) {
 	
-	int ret=DeleteLinkedListElem(rep->liste, elem);
+	int ret=DeleteLinkedListElem(rep->liste, elem);//Suppression du maillon contenant elem
 	if (ret == 1) {
 		rep->nb_elts--;
 		modif = true;
