@@ -5,11 +5,11 @@
 #include "Tab.h"
 #define sizetab 10//sizetab myTab1
 #define nbElts 7//NB ELEMENTS myTab1
-#define TAB2SIZE 19 //taille du tableau 2 ?
+#define TAB2SIZE 20 //taille du tableau 2 ?
 
 int main() {
 	int myTab[sizetab],* myTab2 = NULL;
-	int nbtab2 = 20,nbr=nbElts, i = 0,TAILLE= TAB2SIZE;//nbtab2=nbr de chiffre à écrire dans myTAB2
+	int nbr=nbElts, i = 0,TAILLE= 0;//TAILLE: taille du tableau 2
 
 	initTab(&myTab, sizetab);// -DEBUT MYTAB1-
 	printf("\nmyTab1: ");
@@ -20,28 +20,27 @@ int main() {
 	myTab2 = (int*)malloc(TAB2SIZE * sizeof(int));//Alloue l'espace demandé 
 
 	if (myTab2 != NULL) 
-		initTab(myTab2, sizetab); //Initialise MyTab2
+		TAILLE=initTab(myTab2, TAB2SIZE); //Initialise MyTab2 avec des 0 et renvoie sa taille
 
 	else {
 		printf("mémoire insuffisante");
 		return -1;
 	}
 
-	for ( i = 0; i <nbtab2; i++)
-		*(myTab2 + i) = i + 1; //rempli le tableau de 1 à 20
+	for ( i = 0; i <TAILLE; i++)
+		*(myTab2 + i) = i + 1; //rempli le tableau 2 de 1 à 20 (donc completement rempli)
+	int nbelts2 = TAILLE;//indique le nbre d'éléments dans myTab 2.
 
 	printf("\nmyTab2= ");
-	afficheTab(myTab2, TAB2SIZE, nbtab2);//affiche mytab2
+	afficheTab(myTab2, TAILLE, nbelts2);//affiche mytab2
 
-	myTab2=ajoutElementDansTableau(myTab2, &TAILLE, &nbtab2, 6);
-
-	if (myTab2 == NULL) {
-		printf("mémoire insuffisante");
-	}
-	else {
+	int* test = NULL;
+	if(ajoutElementDansTableau(myTab2, &TAILLE, &nbelts2, 6)!=NULL) //Ajoute 6 a la fin du tableau (besoin de l'agrandire car on dépasse la taille du tableau)
+	{
 		printf("\nmyTab2 v2= ");
-		afficheTab(myTab2, TAILLE, nbtab2);//Affivhe myTab2
+		afficheTab(myTab2, TAILLE, nbelts2);//Affiche myTab2
 	}
+
 	free(myTab2); //destruction tableau myTab2
 									//-FIN MYTAB2-
 	return EXIT_SUCCESS;
