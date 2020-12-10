@@ -26,7 +26,7 @@ int main() {
 
 	displayElements(&tableau, 1, tableau.size);
 
-	setElement(&tableau, pos, element);//On remplace le 160 eme élement par un '6'
+	setElement(&tableau, pos, element);//On remplace le 160 eme élement par un '16'
 	printf("\nLe tableau est maintenant compose de %d cases. \n ", tableau.size);
 
 	displayElements(&tableau, 1, tableau.size);
