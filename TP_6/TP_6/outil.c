@@ -22,7 +22,7 @@ extern bool modif;
 
 int ajouter_un_contact_dans_rep(Repertoire *rep, Enregistrement enr)
 {
-	
+	compact(enr.tel);//Supprime les caractere non numerique du numero qui vient d'etre saisi (s'il y en a)
 #ifdef IMPL_TAB
 	int idx;
 	if (rep->nb_elts < MAX_ENREG) //On ajoute un contact à la fin du repertoire si le nombre max de contact est pas dépassé
@@ -57,7 +57,7 @@ int ajouter_un_contact_dans_rep(Repertoire *rep, Enregistrement enr)
 				elem = rep->liste->head;
 				while (!inserted && i <= rep->liste->size)//Permet de mettre lelement à l'endroit ou il doit être alphabetiquement
 				{
-					if (elem == NULL) {
+					if (elem == NULL) {//Si on se retrouve en finde liste on insert un nouveau maillon a la fin
 						if (InsertElementAt(rep->liste, i, enr) != 0) {
 							rep->nb_elts += 1;
 							rep->est_trie = true;
@@ -65,7 +65,7 @@ int ajouter_un_contact_dans_rep(Repertoire *rep, Enregistrement enr)
 						}
 					}
 					else {
-						if (est_sup(enr, elem->pers)) {
+						if (est_sup(enr, elem->pers)) {//Si l'element se trouve au milieu on l'insert
 							if (InsertElementAt(rep->liste, i, enr) != 0) {
 								rep->nb_elts += 1;
 								rep->est_trie = true;
@@ -101,7 +101,7 @@ void supprimer_un_contact_dans_rep(Repertoire *rep, int indice) {
 	if (rep->nb_elts >= 1)		/* s'il y a au moins un element ds le tableau */
 	{						/* et que l'indice pointe a l'interieur */
 
-		if (indice > -1 && indice < rep->nb_elts) {
+		if (indice > -1 && indice < rep->nb_elts) { //supression du contact et compression du tableau
 			for (int i = indice; i < rep->nb_elts - 1; i++) {
 				*(rep->tab + i) = *(rep->tab + i + 1);
 			}
@@ -154,7 +154,7 @@ void affichage_enreg(Enregistrement enr)
   /**********************************************************************/
 void affichage_enreg_frmt(Enregistrement enr)
 {	
-	int space = 0;
+	int space = 0; //variable qui permet de savoir l'espace à mettre suite à l'affichage de la chaine de caractere
 	printf("| ");
 	printf_s("%s", enr.nom);
 	space = MAX_NOM - strlen(enr.nom);
@@ -201,7 +201,7 @@ bool est_sup(Enregistrement enr1, Enregistrement enr2)  //return true si enr1 es
 /*   Tri Alphabetique du tableau d'enregistrements                   */
 /*********************************************************************/
 
-void trier(Repertoire *rep)
+void trier(Repertoire *rep) //Fonction qui parcourt le tableau et le trie
 {
 
 #ifdef IMPL_TAB
@@ -256,7 +256,7 @@ int rechercher_nom(Repertoire *rep, char nom[], int ind)
 
 #ifdef IMPL_TAB
 	strcpy_s(tmp_nom, MAX_NOM, nom);
-	_strupr_s(tmp_nom,MAX_NOM);
+	_strupr_s(tmp_nom,MAX_NOM);//Met le nom en majuscule avant de comparer
 	while(!trouve&&i<ind_fin){
 		strcpy_s(tmp_nom2,MAX_NOM,  rep->tab[i].nom);
 		_strupr_s(tmp_nom2,MAX_NOM);
@@ -265,7 +265,7 @@ int rechercher_nom(Repertoire *rep, char nom[], int ind)
 	}
 #else
 #ifdef IMPL_LIST
-	strcpy_s(tmp_nom, MAX_NOM, nom);
+	strcpy_s(tmp_nom, MAX_NOM, nom);//Meme chose qu'avec TABL mais avec une liste
 	_strupr_s(tmp_nom, MAX_NOM);
 	while (!trouve && i < ind_fin) {
 		strcpy_s(tmp_nom2, MAX_NOM, GetElementAt(rep->liste,i)->pers.nom);
@@ -283,7 +283,7 @@ int rechercher_nom(Repertoire *rep, char nom[], int ind)
   /*********************************************************************/
   /* Supprimer tous les caracteres non numériques de la chaines        */
   /*********************************************************************/
-void compact(char *s)
+void compact(char *s)//Pemet de supprimer les charactere non numerique d'un numero
 {
 	int j = 0;
 	for (int i = 0; i < MAX_TEL; i++) {
@@ -309,7 +309,7 @@ int sauvegarder(Repertoire *rep, char nom_fichier[])
 		return ERROR;
 	else {
 		int i = 0;
-		while (i < rep->nb_elts) {
+		while (i < rep->nb_elts) { //Parcours le tableau et ecrit dans le fichier 
 			fprintf(fic_rep, "%s;", rep->tab[i].nom);
 			fprintf(fic_rep, "%s;", rep->tab[i].prenom);
 			fprintf(fic_rep, "%s\n", rep->tab[i].tel);
@@ -322,7 +322,7 @@ int sauvegarder(Repertoire *rep, char nom_fichier[])
 	return 0;
 #else
 #ifdef IMPL_LIST
-	if (fopen_s(&fic_rep, nom_fichier, "w+") != 0 || fic_rep == NULL)
+	if (fopen_s(&fic_rep, nom_fichier, "w+") != 0 || fic_rep == NULL)//Meme chose mais en LISTE
 		return ERROR;
 	else {
 		int i = 0;
@@ -392,7 +392,7 @@ int charger(Repertoire *rep, char nom_fichier[])
 				}
 #else
 #ifdef IMPL_LIST
-				Enregistrement pers = { {'A'},{'A'},{'0'} };
+				Enregistrement pers = { {'A'},{'A'},{'0'} };//creation d'un element qui sera rempli par ce qui est dans le fichier texte(ligne par ligne)
 				SingleLinkedListElem *elem = NULL;
 				InsertElementAt(rep->liste,num_rec,pers);
 				elem = GetElementAt(rep->liste, (num_rec));
